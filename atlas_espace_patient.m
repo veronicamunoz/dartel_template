@@ -1,9 +1,9 @@
 clear all;
 clc
-% Path = '/media/veronica/DATAPART1/Documents/MATLAB/';
-% Path2 = '/media/veronica/DATAPART1/Donnees/PatientsPark/';
-Path = 'D:/Documents/MATLAB/';
-Path2 = 'D:/Donnees/PatientsPark/';
+Path = '/home/veronica/Documents/MATLAB/';
+Path2 = '/home/veronica/Donnees/PatientsPark/';
+% Path = 'D:/Documents/MATLAB/';
+% Path2 = 'D:/Donnees/PatientsPark/';
 cd(Path2)
 addpath([Path 'spm12/']);% Ajoute les fonctions et sous fonctions dans le Path
 
@@ -12,11 +12,11 @@ Subjects_dir = Subjects_dir(arrayfun(@(x) ~strcmp(x.name(1),'.'),Subjects_dir));
 liste_anat={};
 liste_fgatir={};
 
-%% Segmentation pour r�cuperer le champ de transformation inverse (iy)
+%% Segmentation pour recuperer le champ de transformation inverse (iy)
 for i = 1 : size(Subjects_dir,1)
     folder_path=fullfile(Path2, Subjects_dir(i,1).name);
     if (Subjects_dir(i,1).isdir==1) && (exist(fullfile(folder_path,'Anat'), 'dir')~=0) && (exist(fullfile(folder_path,'FGATIR'), 'dir')~=0)
-        liste_anat{end+1}=[folder_path '\Anat\rAnat.nii,1'];
+        liste_anat{end+1}=[folder_path '\Anat\Anat.nii,1'];
         liste_fgatir{end+1}=[folder_path '\FGATIR\rc3d_FGATIR.nii,1'];
     end
 end
@@ -35,27 +35,27 @@ matlabbatch{1}.spm.spatial.preproc.channel(2).vols = liste_fgatir;
 matlabbatch{1}.spm.spatial.preproc.channel(2).biasreg = 0.001;
 matlabbatch{1}.spm.spatial.preproc.channel(2).biasfwhm = 60;
 matlabbatch{1}.spm.spatial.preproc.channel(2).write = [0 0];
-matlabbatch{1}.spm.spatial.preproc.tissue(1).tpm = {'D:\Documents\MATLAB\spm12\tpm\TPM.nii,1'};
+matlabbatch{1}.spm.spatial.preproc.tissue(1).tpm = {'/home/veronica/Documents/MATLAB/spm12/tpm/TPM.nii,1'};
 matlabbatch{1}.spm.spatial.preproc.tissue(1).ngaus = 1;
 matlabbatch{1}.spm.spatial.preproc.tissue(1).native = [1 1];
 matlabbatch{1}.spm.spatial.preproc.tissue(1).warped = [0 1];
-matlabbatch{1}.spm.spatial.preproc.tissue(2).tpm = {'D:\Documents\MATLAB\spm12\tpm\TPM.nii,2'};
+matlabbatch{1}.spm.spatial.preproc.tissue(2).tpm = {'/home/veronica/Documents/MATLAB/spm12/tpm/TPM.nii,2'};
 matlabbatch{1}.spm.spatial.preproc.tissue(2).ngaus = 1;
 matlabbatch{1}.spm.spatial.preproc.tissue(2).native = [1 1];
 matlabbatch{1}.spm.spatial.preproc.tissue(2).warped = [0 1];
-matlabbatch{1}.spm.spatial.preproc.tissue(3).tpm = {'D:\Documents\MATLAB\spm12\tpm\TPM.nii,3'};
+matlabbatch{1}.spm.spatial.preproc.tissue(3).tpm = {'/home/veronica/Documents/MATLAB/spm12/tpm/TPM.nii,3'};
 matlabbatch{1}.spm.spatial.preproc.tissue(3).ngaus = 2;
 matlabbatch{1}.spm.spatial.preproc.tissue(3).native = [1 1];
 matlabbatch{1}.spm.spatial.preproc.tissue(3).warped = [0 1];
-matlabbatch{1}.spm.spatial.preproc.tissue(4).tpm = {'D:\Documents\MATLAB\spm12\tpm\TPM.nii,4'};
+matlabbatch{1}.spm.spatial.preproc.tissue(4).tpm = {'/home/veronica/Documents/MATLAB/spm12/tpm/TPM.nii,4'};
 matlabbatch{1}.spm.spatial.preproc.tissue(4).ngaus = 3;
 matlabbatch{1}.spm.spatial.preproc.tissue(4).native = [1 1];
 matlabbatch{1}.spm.spatial.preproc.tissue(4).warped = [0 1];
-matlabbatch{1}.spm.spatial.preproc.tissue(5).tpm = {'D:\Documents\MATLAB\spm12\tpm\TPM.nii,5'};
+matlabbatch{1}.spm.spatial.preproc.tissue(5).tpm = {'/home/veronica/Documents/MATLAB/spm12/tpm/TPM.nii,5'};
 matlabbatch{1}.spm.spatial.preproc.tissue(5).ngaus = 4;
 matlabbatch{1}.spm.spatial.preproc.tissue(5).native = [1 1];
 matlabbatch{1}.spm.spatial.preproc.tissue(5).warped = [0 1];
-matlabbatch{1}.spm.spatial.preproc.tissue(6).tpm = {'D:\Documents\MATLAB\spm12\tpm\TPM.nii,6'};
+matlabbatch{1}.spm.spatial.preproc.tissue(6).tpm = {'/home/veronica/Documents/MATLAB/spm12/tpm/TPM.nii,6'};
 matlabbatch{1}.spm.spatial.preproc.tissue(6).ngaus = 2;
 matlabbatch{1}.spm.spatial.preproc.tissue(6).native = [1 1];
 matlabbatch{1}.spm.spatial.preproc.tissue(6).warped = [0 1];
@@ -69,7 +69,7 @@ matlabbatch{1}.spm.spatial.preproc.warp.write = [1 1];
 matlabbatch{2}.spm.tools.dartel.warp.images{1}(1) = cfg_dep('Segment: rc1 Images', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','tiss', '()',{1}, '.','rc', '()',{':'}));
 matlabbatch{2}.spm.tools.dartel.warp.images{2}(1) = cfg_dep('Segment: rc2 Images', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','tiss', '()',{2}, '.','rc', '()',{':'}));
 matlabbatch{2}.spm.tools.dartel.warp.images{3}(1) = cfg_dep('Segment: rc3 Images', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','tiss', '()',{3}, '.','rc', '()',{':'}));
-matlabbatch{2}.spm.tools.dartel.warp.settings.template = 'SignaParkTemplate1';
+matlabbatch{2}.spm.tools.dartel.warp.settings.template = 'SignaPark2';
 matlabbatch{2}.spm.tools.dartel.warp.settings.rform = 0;
 matlabbatch{2}.spm.tools.dartel.warp.settings.param(1).its = 3;
 matlabbatch{2}.spm.tools.dartel.warp.settings.param(1).rparam = [4 2 1e-06];
@@ -98,6 +98,8 @@ matlabbatch{2}.spm.tools.dartel.warp.settings.param(6).slam = 0.5;
 matlabbatch{2}.spm.tools.dartel.warp.settings.optim.lmreg = 0.01;
 matlabbatch{2}.spm.tools.dartel.warp.settings.optim.cyc = 3;
 matlabbatch{2}.spm.tools.dartel.warp.settings.optim.its = 3;
+
+
 
 spm('defaults', 'FMRI');
 spm_jobman('run', matlabbatch);
