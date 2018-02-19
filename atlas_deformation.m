@@ -1,7 +1,7 @@
 clear all;
 clc
 Path = '/home/veronica/Documents/MATLAB/';
-Path2 = '/home/veronica/Donnees/PatientsPark/';
+Path2 = '/home/veronica/Donnees/ControlsPark/Last/';
 cd(Path2)
 addpath([Path 'spm12/']);% Ajoute les fonctions et sous fonctions dans le Path
 
@@ -73,9 +73,11 @@ for i = 1 : size(Subjects_dir,1)
     if (Subjects_dir(i,1).isdir==1) && (exist(ichampdef, 'file')~=0)
         clear matlabbatch
         spm_jobman('initcfg');
-        matlabbatch{1}.spm.util.defs.comp{1}.def = {'/home/veronica/Donnees/mni_PD25/y_PD25-fusion-template-1mm.nii'};
+%         matlabbatch{1}.spm.util.defs.comp{1}.def = {'/home/veronica/Donnees/mni_PD25/y_PD25-fusion-template-1mm.nii'};
+        matlabbatch{1}.spm.util.defs.comp{1}.def = {'/home/veronica/Documents/MATLAB/spm12/tpm/y_Neuromorphometrics_ScalableBrain.nii'};
         matlabbatch{1}.spm.util.defs.comp{2}.def = {ichampdef};
-        matlabbatch{1}.spm.util.defs.out{1}.pull.fnames = {'/home/veronica/Donnees/mni_PD25/PD25-subcortical-complete.nii'};
+%         matlabbatch{1}.spm.util.defs.out{1}.pull.fnames = {'/home/veronica/Donnees/mni_PD25/PD25-subcortical-complete.nii'};
+        matlabbatch{1}.spm.util.defs.out{1}.pull.fnames = {'/home/veronica/Documents/MATLAB/spm12/tpm/Neuromorphometrics_ScalableBrain_seg.nii'};
         matlabbatch{1}.spm.util.defs.out{1}.pull.savedir.saveusr = {folder_path};
         matlabbatch{1}.spm.util.defs.out{1}.pull.interp = 0;
         matlabbatch{1}.spm.util.defs.out{1}.pull.mask = 1;

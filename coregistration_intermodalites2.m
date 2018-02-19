@@ -1,9 +1,14 @@
 clear all;
 close all;
 
+
 Anat_path = '/home/veronica/Donnees/PatientsPark/';
 Perf_path = '/home/veronica/Donnees/PerfusionPark/';
 Diff_path = '/home/veronica/Donnees/DTIPark/Park/';
+
+% Anat_path = '/home/veronica/Donnees/ControlsPark/Last/';
+% Perf_path = '/home/veronica/Donnees/PerfusionControls/';
+% Diff_path = '/home/veronica/Donnees/DTIPark/Control/';
 Atlas_path = '/home/veronica/Donnees/mni_PD25/PD25-fusion-template-1mm.nii';
 Subj_dir = dir([Anat_path '*']);
 Subj_dir = Subj_dir(arrayfun(@(x) ~strcmp(x.name(1),'.'),Subj_dir));
@@ -30,12 +35,12 @@ if (Subj_dir(i,1).isdir==1 && exist(t1_path, 'file') ~= 0)
     spm_jobman('run',matlabbatch);
     clear matlabbatch
     t1_path=fullfile(Anat_path, Subj_dir(i,1).name, 'Anat', 'rAnat.nii');
-    disp('---t1 recoupee');
+%     disp('---t1 recoupee');
     
     % FGATIR (Resampling + Coregister)
     fgatir_path=fullfile(Anat_path, Subj_dir(i,1).name, 'FGATIR');
     if exist(fullfile(fgatir_path, 'FGATIR.nii'), 'file') ~= 0
-        system([C3Dcommand fullfile(fgatir_path, 'FGATIR.nii') ' -resample-mm 1.0x1.0x1.0mm -o ' fullfile(fgatir_path, 'c3d_FGATIR.nii')]);
+%         system([C3Dcommand fullfile(fgatir_path, 'FGATIR.nii') ' -resample-mm 1.0x1.0x1.0mm -o ' fullfile(fgatir_path, 'c3d_FGATIR.nii')]);
         
         clear matlabbatch
         spm_jobman('initcfg');
@@ -46,10 +51,10 @@ if (Subj_dir(i,1).isdir==1 && exist(t1_path, 'file') ~= 0)
         matlabbatch{1}.spm.spatial.coreg.estwrite.eoptions.sep = [4 2];
         matlabbatch{1}.spm.spatial.coreg.estwrite.eoptions.tol = [0.02 0.02 0.02 0.001 0.001 0.001 0.01 0.01 0.01 0.001 0.001 0.001];
         matlabbatch{1}.spm.spatial.coreg.estwrite.eoptions.fwhm = [7 7];
-        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.interp = 4;
+        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.interp = 0;
         matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.wrap = [0 0 0];
         matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.mask = 0;
-        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.prefix = 'r';
+        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.prefix = 'r2';
        spm('defaults', 'FMRI');
        spm_jobman('run', matlabbatch);
        clear matlabbatch
@@ -59,7 +64,7 @@ if (Subj_dir(i,1).isdir==1 && exist(t1_path, 'file') ~= 0)
     % PERFUSION (Resamplig + Coregister)
     cbf_path=fullfile(Perf_path, Subj_dir(i,1).name, 'pcasl');
     if exist(fullfile(cbf_path, 'cbf_map.nii'), 'file') ~= 0
-        system([C3Dcommand fullfile(cbf_path, 'cbf_map.nii') ' -resample-mm 1.0x1.0x1.0mm -o ' fullfile(cbf_path, 'c3d_CBF.nii')]);
+%         system([C3Dcommand fullfile(cbf_path, 'cbf_map.nii') ' -resample-mm 1.0x1.0x1.0mm -o ' fullfile(cbf_path, 'c3d_CBF.nii')]);
         clear matlabbatch
         spm_jobman('initcfg');
         matlabbatch{1}.spm.spatial.coreg.estwrite.ref = {t1_path};
@@ -69,10 +74,10 @@ if (Subj_dir(i,1).isdir==1 && exist(t1_path, 'file') ~= 0)
         matlabbatch{1}.spm.spatial.coreg.estwrite.eoptions.sep = [4 2];
         matlabbatch{1}.spm.spatial.coreg.estwrite.eoptions.tol = [0.02 0.02 0.02 0.001 0.001 0.001 0.01 0.01 0.01 0.001 0.001 0.001];
         matlabbatch{1}.spm.spatial.coreg.estwrite.eoptions.fwhm = [7 7];
-        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.interp = 4;
+        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.interp = 0;
         matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.wrap = [0 0 0];
         matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.mask = 0;
-        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.prefix = 'r';
+        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.prefix = 'r2';
        spm('defaults', 'FMRI');
        spm_jobman('run', matlabbatch);
        clear matlabbatch
@@ -81,7 +86,7 @@ if (Subj_dir(i,1).isdir==1 && exist(t1_path, 'file') ~= 0)
     % DIFFUSION (Resamplig + Coregister)
     dti_path=fullfile(Diff_path, Subj_dir(i,1).name, 'DTI');
     if exist(fullfile(dti_path, 'dti_MD.nii'), 'file') ~= 0
-        system([C3Dcommand fullfile(dti_path, 'dti_MD.nii') ' -resample-mm 1.0x1.0x1.0mm -o ' fullfile(dti_path, 'c3d_MD.nii')]);
+%         system([C3Dcommand fullfile(dti_path, 'dti_MD.nii') ' -resample-mm 1.0x1.0x1.0mm -o ' fullfile(dti_path, 'c3d_MD.nii')]);
                 clear matlabbatch
         spm_jobman('initcfg');
         matlabbatch{1}.spm.spatial.coreg.estwrite.ref = {t1_path};
@@ -91,17 +96,17 @@ if (Subj_dir(i,1).isdir==1 && exist(t1_path, 'file') ~= 0)
         matlabbatch{1}.spm.spatial.coreg.estwrite.eoptions.sep = [4 2];
         matlabbatch{1}.spm.spatial.coreg.estwrite.eoptions.tol = [0.02 0.02 0.02 0.001 0.001 0.001 0.01 0.01 0.01 0.001 0.001 0.001];
         matlabbatch{1}.spm.spatial.coreg.estwrite.eoptions.fwhm = [7 7];
-        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.interp = 4;
+        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.interp = 0;
         matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.wrap = [0 0 0];
         matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.mask = 0;
-        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.prefix = 'r';
+        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.prefix = 'r2';
        spm('defaults', 'FMRI');
        spm_jobman('run', matlabbatch);
        clear matlabbatch
        disp('---Carte MD coregistree');
     end
     if exist(fullfile(dti_path, 'dti_FA.nii'), 'file') ~= 0
-        system([C3Dcommand fullfile(dti_path, 'dti_FA.nii') ' -resample-mm 1.0x1.0x1.0mm -o ' fullfile(dti_path, 'c3d_FA.nii')]);
+%         system([C3Dcommand fullfile(dti_path, 'dti_FA.nii') ' -resample-mm 1.0x1.0x1.0mm -o ' fullfile(dti_path, 'c3d_FA.nii')]);
         clear matlabbatch
         spm_jobman('initcfg');
         matlabbatch{1}.spm.spatial.coreg.estwrite.ref = {t1_path};
@@ -111,10 +116,10 @@ if (Subj_dir(i,1).isdir==1 && exist(t1_path, 'file') ~= 0)
         matlabbatch{1}.spm.spatial.coreg.estwrite.eoptions.sep = [4 2];
         matlabbatch{1}.spm.spatial.coreg.estwrite.eoptions.tol = [0.02 0.02 0.02 0.001 0.001 0.001 0.01 0.01 0.01 0.001 0.001 0.001];
         matlabbatch{1}.spm.spatial.coreg.estwrite.eoptions.fwhm = [7 7];
-        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.interp = 4;
+        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.interp = 0;
         matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.wrap = [0 0 0];
         matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.mask = 0;
-        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.prefix = 'r';
+        matlabbatch{1}.spm.spatial.coreg.estwrite.roptions.prefix = 'r2';
        spm('defaults', 'FMRI');
        spm_jobman('run', matlabbatch);
        clear matlabbatch
