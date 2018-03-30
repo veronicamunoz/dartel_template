@@ -18,11 +18,11 @@ commaHeader = commaHeader(:)';
 textHeader = cell2mat(commaHeader); %cHeader in text with commas
 
 %write header to file
-fid = fopen('/home/veronica/Donnees/Patients_3_ROI_nohemi.csv','w'); 
+fid = fopen('/home/veronica/Donnees/Patients_3_onlysub2.csv','w'); 
 fprintf(fid,'%s\n',textHeader)
 fclose(fid)
 
-for i = 1 : 3 %size(Subj_dir,1)
+for i = [7 13 14]%1 : 3 %1:size(Subj_dir,1)  %[7 13 14]%
     perf=fullfile(Perf_path, Subj_dir(i,1).name ,'pcasl', 'r2c3d_CBF.nii');
     FA=fullfile(Diff_path, Subj_dir(i,1).name, 'DTI', 'r2c3d_FA.nii');
     MD=fullfile(Diff_path, Subj_dir(i,1).name, 'DTI', 'r2c3d_MD.nii');
@@ -57,7 +57,9 @@ for i = 1 : 3 %size(Subj_dir,1)
         favect = fa(:); mdvect = md(:); cbfvect = cbf(:); 
         
         % ROIs en vecteur
-        rois = categorical(seg,0:20,{'Other','RN','RN','SN','SN', 'STN','STN', 'Cau','Cau','Putamen', 'Putamen','GPe','GPe','GPi','GPi','Th','Th','CS','CS','CI','CI'});
+        %rois = categorical(seg, 0:20, {'Other','RN_l','RN_r','SN_l','SN_r', 'STN_l','STN_r', 'Cau_l','Cau_r','Putamen_l', 'Putamen_r','GPe_l','GPe_r','GPi_l','GPi_r','Th_l','Th_r','CS_l','CS_r','CI_l','CI_r'});
+        %rois = categorical(seg, 0:20, {'Other','RN','RN','SN','SN', 'STN','STN', 'Cau','Cau','Putamen', 'Putamen','GPe','GPe','GPi','GPi','Th','Th','CS','CS','CI','CI'});
+        rois = categorical(seg, 0:20, {'Other','Brain','Brain','Brain','Brain', 'Brain','Brain', 'Brain','Brain','Brain', 'Brain','Brain','Brain','Brain','Brain','Brain','Brain','Brain','Brain','Brain','Brain'});
         rois = rois(:);
         
         % Construction du tableur de coordonnées et valeurs correspondantes
@@ -71,6 +73,38 @@ for i = 1 : 3 %size(Subj_dir,1)
         
         data(find(rois=='Other'),:) = [];
         rois(find(rois=='Other')) = [];
+        
+        data2 = data;
+        bordmin = zeros(length(data2),1);
+        while ~all(isnan(data2(:,3)))
+            mintemp = (data2(:,3)==min(data2(:,3)));
+            bordmin = bordmin + mintemp;
+            mintemp = logical(mintemp);
+            data2(mintemp,3) = NaN;
+            xymin = [data2(mintemp,1), data2(mintemp,2)];
+            for y=1:size(xymin,1)
+                xy = (data2(:,1)==xymin(y,1) & data2(:,2)==xymin(y,2));
+                data2(xy,3) = NaN;
+            end
+        end
+        data(logical(bordmin),:)=[];
+        rois(logical(bordmin),:)=[];
+        
+        data2 = data;
+        bordmax = zeros(length(data2),1);
+        while ~all(isnan(data2(:,3)))
+            maxtemp = (data2(:,3)==min(data2(:,3)));
+            bordmax = bordmax + maxtemp;
+            maxtemp = logical(maxtemp);
+            data2(maxtemp,3) = NaN;
+            xymax = [data2(maxtemp,1), data2(maxtemp,2)];
+            for y=1:size(xymax,1)
+                xy = (data2(:,1)==xymax(y,1) & data2(:,2)==xymax(y,2));
+                data2(xy,3) = NaN;
+            end
+        end
+        data(logical(bordmax),:)=[];
+        rois(logical(bordmax),:)=[];
 
         % Group, patient name and VOI information table
         info = ["Patient" Subj_dir(i,1).name];
@@ -85,6 +119,6 @@ ROI=string(ROI);
 
 T = [Info ROI Data];
 T = T';
-fid = fopen('/home/veronica/Donnees/Patients_3_ROI_nohemi.csv','a'); 
-fprintf(fid,'%s, %s, %s, %s, %s, %s, %s, %s, %s\n', T(:,:));
+fid = fopen('/home/veronica/Donnees/Patients_3_onlysub2.csv','a'); 
+fprintf(fid,'%s,%s,%s,%s,%s,%s,%s,%s,%s\n', T(:,:));
 fclose(fid);
